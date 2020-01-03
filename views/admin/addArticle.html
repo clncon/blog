@@ -1,0 +1,124 @@
+{{define "addArticle.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="/static/css/bootstrap-theme.css"/>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="/static/css/editormd.css"/>
+    <link rel="stylesheet" href="/static/css/editormd.logo.css"/>
+    <link rel="stylesheet" href="/static/css/editormd.preview.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap-select.min.js"></script>
+    <script src="/static/js/i18n/defaults-zh_CN.js"></script>
+    <script src="/static/js/editormd.min.js"></script>
+    <script type="text/javascript">
+        var editor
+        $(function() {
+            $("#fa-page").addClass("active")
+                editor = editormd("content", {
+                width  : "100%",
+                height: "550px",
+                path   : "/static/js/lib/",
+                saveHTMLToTextarea : true
+            });
+            $("#tagType").selectpicker({
+                'selectedText':'cat'
+            })
+        });
+        
+        function save() {
+            var title = $("#title").val();
+            var desc = $("#desc").val();
+            var publish = $("#publish").find("option:selected").val()
+            var html = editor.getHTML();
+            var source=editor.getMarkdown();
+            var arr = $("#tagType").val();
+            var tags="";
+            for (var i=0; i<arr.length; i++){
+                if(i==arr.length-1){
+                    tags+=arr[i];
+                }else{
+                    tags+=arr[i]+",";
+                }
+
+            }
+            //alert(tags);
+            var param = {"tags":tags,"title":title,"desc":desc,"html":html,"publish":publish,"source":source}
+            //console.log(param)
+            $.post("/admin/addPage",param,function(result){
+                alert("添加Page页面成功")
+                window.location.href="/admin/index";
+            });
+
+
+        }
+        function back() {
+            window.location.href="/admin/index";
+        }
+    </script>
+    <style type="text/css">
+        .context{
+            float: right;
+            width: 80%;
+            height: 550px;
+            padding: 0;
+            overflow:scroll;
+        }
+        .buttonsGroup{
+            width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+{{template "head.html" .}}
+{{template "slider.html" .}}
+    <div class="context">
+        <div class="input-group">
+            <span class="input-group-addon">标题</span>
+            <input type="text" id="title" class="form-control" placeholder="这里填写标题" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">描述</span>
+            <textarea name="desc" id="desc" rows="5" class="form-control" aria-describedby="sizing-addon1"></textarea>
+        </div>
+    <!--内容-->
+    <div id="content">
+                <textarea style="display:none;">### Settings
+
+```javascript
+var testEditor = editormd("test-editormd", {
+    autoHeight : true
+});
+```
+</textarea>x
+    </div>
+        <div>
+            <span>标签</span>
+            <select id="tagType" multiple class="selectpicker" style="width:150px;height: 38px;">
+                {{range .tags}}
+                    <option value="{{.ID}}">{{.Name}}</option>
+                {{end}}
+            </select>
+            <span>是否发布</span>
+            <select id="publish">
+                <option value="true">是</option>
+                <option value="false">否</option>
+            </select>
+        </div>
+        <div class="buttonsGroup">
+            <!-- Standard button -->
+            <button type="button" class="btn btn-success" onclick="save()">保存</button>
+            <!-- Standard button -->
+            <button type="button" class="btn btn-primary" onclick="back()">返回</button>
+        </div>
+</div>
+{{template "foot.html" .}}
+</body>
+</html>
+{{end}}

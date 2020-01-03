@@ -1,0 +1,41 @@
+{{define "slider.html"}}
+    <style type="text/css">
+        .left-menu{
+            display: inline-block;
+            width: 10%;
+            background: #0f0f0f;
+            margin: 0;
+        }
+        .left-menu li{
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+        }
+        a{
+            color: #FFFFFF;
+        }
+        .active a {
+            background: #9d9d9d;
+            color: #0f0f0f;
+        }
+    </style>
+<div class="left-menu">
+    <ul class="nav">
+        <li id="fa-user">
+            <a href="/admin/userPage">用户管理</a>
+        </li>
+        <li id="fa-page">
+            <a href="/admin/index">文章管理</a>
+        </li>
+        <li id="fa-tag">
+            <a href="/admin/TagHtml">标签管理</a>
+        </li>
+        <li id="fa-common">
+            <a>评论管理</a>
+        </li>
+        <li id="fa-other">
+            <a href="#">其他管理</a>
+        </li>
+    </ul>
+</div>
+{{end}}

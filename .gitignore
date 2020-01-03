@@ -1,0 +1,6 @@
+.idea/
+.git/
+blog.db
+vendor/
+*.mod
+*.sum

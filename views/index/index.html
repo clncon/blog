@@ -1,0 +1,206 @@
+{{define "blog/index.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js" ></script>
+    <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css"/>
+    <style type="text/css">
+         body{
+             background-color: #EBEBEB;
+
+         }
+         .middle{
+           /*border: 2px red solid;*/
+             width: 70%;
+             display: inline-block;
+         }
+         #right{
+         /* border: 1px red solid;*/
+           float: right;
+           width: 30%;
+
+         }
+         .widget{
+             background-color: white;
+             width: 80%;
+             padding: 20px;
+             margin-top: 20px;
+         }
+         .abort-me{
+             width: 100%;
+
+         }
+         .contact-me{
+             width: 100%;
+
+         }
+         .contact-me h3{
+             margin: 5px;
+             font-size: 15px;
+             font-weight: bolder;
+         }
+         .abort-me h2{
+             margin: 10px;
+             font-size: 18px;
+             font-weight: bolder;
+         }
+        .element{
+             background-color: white;
+             margin-left: 212px;
+             margin-top: 20px;
+             width: 75%;
+             height: 300px;
+             padding:20px;
+        }
+         .page{
+             background-color: white;
+             margin-left: 212px;
+             margin-top: 20px;
+             width: 75%;
+             min-height: 800px;
+             padding:20px;
+         }
+         .page .head {
+             text-align: center;
+         }
+         .desc {
+             background-color: RGB(247,247,247);
+             width: 100%;
+             min-height: 100px;
+             margin: 0 auto;
+         }
+         .desc h3{
+             padding: 5px;
+         }
+         .desc p{
+             padding: 5px;
+         }
+         .context{
+             width: 75%;
+             margin-top: 10px;
+         }
+       .element-body{
+         /*border: 1px red solid;*/
+           width: 70%;
+           height: 70%;
+           margin-left: 180px;
+       }
+       .foot-style{
+           margin-left: 10px;
+       }
+       .element-foot{
+           padding-bottom: 5px;
+       }
+       #detailBtn{
+           float: right;
+       }
+       .middle-foot{
+
+           margin-top: 10px;
+           margin-left: 250px;
+
+       }
+       .img-icon1{
+           width: 140px;
+           height: 140px;
+           vertical-align: center;
+       }
+        .category-list{
+            list-style:none;
+            padding-left:1px
+        }
+        .foot-content span{
+            color: white;
+        }
+    </style>
+    <script type="application/javascript">
+        function showContent(id) {
+            window.location.href="/page?id="+id
+        }
+    </script>
+</head>
+<body>
+<div>
+    {{template "head.html" .}}
+</div>
+<!-------------------------------------以下是内容主题------------------------------------------------------>
+<div class="middle" style="height: 800px" id="pageList">
+    {{range .posts}}
+    <div class="element">
+        <div class="col-xs-6 col-md-3">
+            <a href="#" class="thumbnail">
+                <img src="/static/images/xyji.jpg" alt="...">
+            </a>
+        </div>
+        <div class="element-body">
+            <h3>{{.Page.Title}}</h3>
+            <li style="margin-left: 10px">{{dateFormat .Page.UpdatedAt "2006-01-02 15:04:05"}}</li>
+            <p>{{.Page.Desc}}</p>
+        </div>
+
+        <hr>
+
+        <div>
+           {{range .Tags}}
+            <span class="foot-style">
+                <i class="glyphicon glyphicon-tag"></i>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#">{{.Name}}</a>
+
+            </span>
+            {{end}}
+            <button class="btn btn-info" type="submit" id="detailBtn" onclick="showContent({{.Page.ID}})">了解更多</button>
+        </div>
+
+    </div>
+    {{end}}
+</div>
+
+
+
+ <div id="right">
+     <div class="widget">
+     <div class="abort-me">
+
+         <img src="/static/images/weixin1.jpg" alt="" class="img-rounded img-icon1" >
+          &nbsp;
+         <img src="/static/images/xyji.jpg" alt="" class="img-rounded img-icon1" >
+
+         <h2>扫码关注公众号</h2>
+         <p>公众号每日技术干货推送！小程序个人学习私房笔记分享！</p>
+     </div>
+     </div>
+     <div class="widget">
+         <div class="contact-me">
+            <h3>联系我</h3>
+             <hr>
+              <p>
+                  邮箱：clncon@163.com<br>
+                  github：https://github.com/clncon
+              </p>
+         </div>
+     </div>
+     <div class="widget">
+         <div class="contact-me">
+             <h3>分类</h3>
+             <hr>
+               <ul class="category-list">
+                   <li><a href="#">新垣结衣</a> <span>(31)</span></li>
+                   <li><a href="#">新垣结衣</a> <span>(31)</span></li>
+                   <li><a href="#">新垣结衣</a> <span>(31)</span></li>
+                   <li><a href="#">新垣结衣</a> <span>(31)</span></li>
+                   <li><a href="#">新垣结衣</a> <span>(31)</span></li>
+                   <li><a href="#">新垣结衣</a> <span>(31)</span></li>
+               </ul>
+         </div>
+     </div>
+     </div>
+ </div>
+{{template "foot.html" .}}
+</body>
+</html>
+{{end}}}

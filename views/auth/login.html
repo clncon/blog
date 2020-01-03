@@ -1,0 +1,74 @@
+{{define "login.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css"/>
+    <style type="text/css">
+        body{
+            background-color: #EBEBEB;
+
+        }
+
+        .main{
+             width: 100%;
+
+        }
+        .login{
+             width: 40%;
+             height: 400px;
+            background-color: white;
+            margin: 200px auto;
+            padding: 20px;
+        }
+        .login h1{
+            color: red;
+            font-family: "Cambria Math";
+        }
+    </style>
+</head>
+<body>
+<div>
+</div>
+   <div class="main">
+       {{if not .message}}
+           <p class="login-box-msg">Sign in to start your session</p>
+       {{else}}
+           <p class="login-box-msg text-danger">{{.message}}</p>
+       {{end}}
+         <div class="login">
+             <h1>登录</h1>
+             <form action="/login" method="post">
+                 <div class="form-group">
+                     <label for="exampleInputEmail1">用户名</label>
+                     <input type="email" name="username" class="form-control" id="exampleInputEmail1" placeholder="邮箱/手机号/用户名">
+                 </div>
+                 <div class="form-group">
+                     <label for="exampleInputPassword1">密码</label>
+                     <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="请输入密码">
+                 </div>
+                 <div class="checkbox">
+                     <label>
+                         <input type="checkbox"> 记住我
+                     </label>
+                 </div>
+                 <button type="submit" class="btn btn-primary btn-lg btn-block">登录</button>
+             </form>
+
+             <div class="social-auth-links text-center">
+                 <p>- OR -</p>
+                 <a href="/auth/github" class="btn btn-sm">使用github登录</a> /
+                 <a href="/register" class="btn btn-sm">注册新用户</a>
+             </div>
+
+
+         </div>
+
+   </div>
+  {{template "foot.html" .}}
+</body>
+</html>
+{{end}}

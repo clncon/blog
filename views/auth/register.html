@@ -1,0 +1,93 @@
+{{define "register.html"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css"/>
+    <style type="text/css">
+        body{
+            background-color: #EBEBEB;
+
+        }
+
+        .main{
+             width: 100%;
+
+        }
+        .register{
+             width: 40%;
+             height: 400px;
+            background-color: white;
+            margin: 200px auto;
+            padding: 20px;
+        }
+        .login h1{
+            color: red;
+            font-family: "Cambria Math";
+        }
+    </style>
+</head>
+<body>
+<script type="application/javascript">
+    function checkPassword() {
+       if ($("#form-password").val()== $("#form-password-again").val()){
+          return
+       }else{
+           alert("两次输入的密码不一致！！！")
+           return false
+       }
+    }
+    $(document).ready(function () {
+        //bind'myForm' and provide a simple callback funciton
+        $("#signupForm").ajaxForm(function(data){
+           if(data.success){
+               alert("注册成功");
+               window.location.href="/login"
+           }else {
+               $("#msg").text(data.message)
+               $("#msg").addClass("text-danger")
+           }
+        });
+    });
+</script>
+<div>
+</div>
+   <div class="main">
+       {{if not .message}}
+           <p id="msg" class="login-box-msg">Register a new membership</p>
+       {{else}}
+           <p id="msg" class="login-box-msg text-danger">{{.message}}</p>
+       {{end}}
+         <div class="register">
+             <h1>注册</h1>
+             <form id="signupForm" action="/register" method="post" onsubmit="return checkPassword();">
+                 <div class="form-group">
+                     <label for="exampleInputEmail1">邮箱</label>
+                     <input type="email" class="form-control" name="email" placeholder="邮箱/手机号/用户名">
+                 </div>
+                 <div class="form-group">
+                     <label for="exampleInputPassword1">密码</label>
+                     <input type="password" class="form-control" id="form-password" name="password" placeholder="请输入密码">
+                 </div>
+                 <div class="form-group">
+                     <label for="exampleInputPassword1">重复密码</label>
+                     <input type="password" class="form-control" id="form-password-again"placeholder="请再次输入密码">
+                 </div>
+                 <div class="checkbox">
+                     <label>
+                         <input type="checkbox"> I agree to the <a href="#">terms</a>
+                     </label>
+                 </div>
+                 <button type="submit" class="btn btn-primary btn-lg btn-block">注册</button>
+             </form>
+         </div>
+
+   </div>
+  {{template "foot.html" .}}
+</body>
+</html>
+{{end}}
