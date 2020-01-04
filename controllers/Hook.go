@@ -4,7 +4,6 @@ import (
 	"blog/system"
 	"crypto/hmac"
 	"crypto/sha1"
-	"encoding/hex"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"os/exec"
@@ -20,11 +19,11 @@ func Go(c *gin.Context) {
 
 	mac.Write(buff[0:n])
 
-	result:=hex.EncodeToString(mac.Sum(nil))
+	//result:=hex.EncodeToString(mac.Sum(nil))
 
     signature :=c.GetHeader("X-Hub-Signature")
 	doShell(command)
-	c.JSON(200, signature+":"+result)
+	c.JSON(200, signature+":"+string(buff[0:n]))
 }
 
 func doShell(command string) {
