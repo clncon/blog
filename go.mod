@@ -9,6 +9,7 @@ require (
 	github.com/gin-gonic/gin v1.5.0
 	github.com/jinzhu/gorm v1.9.11
 	github.com/pkg/errors v0.8.0
+	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.2.0
 	github.com/snluu/uuid v0.0.0-20130306162636-1dd34a9ad6c0
 	gopkg.in/yaml.v2 v2.2.2

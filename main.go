@@ -52,6 +52,7 @@ func main() {
 	authorized.Use(AdminScopeRequired())
 	{
 		//need to auth
+		authorized.POST("/upload",controllers.Upload)
 		authorized.GET("/logout",controllers.LogoutGet)
 		authorized.GET("/TagHtml",controllers.TagHtml)
 		authorized.GET("/listTag",controllers.ListTag)

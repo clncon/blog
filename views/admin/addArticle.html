@@ -24,7 +24,11 @@
                 width  : "100%",
                 height: "550px",
                 path   : "/static/js/lib/",
-                saveHTMLToTextarea : true
+                saveHTMLToTextarea : true,
+                emoji:true,
+                imageUpload: true,
+                imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL: "/admin/upload"
             });
             $("#tagType").selectpicker({
                 'selectedText':'cat'

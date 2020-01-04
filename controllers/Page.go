@@ -3,8 +3,11 @@ package controllers
 import (
 	"blog/models"
 	"github.com/gin-gonic/gin"
+	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
+	"io"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -17,6 +20,31 @@ func ToAddPageHTML(c *gin.Context){
 		"user":user,
 	})
 
+
+}
+func Upload(c *gin.Context){
+   file,header,err:=c.Request.FormFile("editormd-image-file")
+	if err != nil {
+		c.String(http.StatusBadRequest, "Bad request")
+	}
+	//文件名称
+	filename := header.Filename
+	//文件名称的唯一处理
+	suffix:=strings.Split(filename,".")[1]
+	u1:= uuid.NewV4().String()
+	filename  = u1+"."+suffix
+	//创建文件
+	path:="static/upload/"+filename
+	out,err:=os.Create(path)
+	defer out.Close()
+	_,err = io.Copy(out,file)
+	if err!=nil{
+		logrus.Error(err.Error())
+	}
+	result:=make(map[string]interface{});
+	result["success"]=1
+	result["url"]="/"+path
+	c.JSON(200,result)
 
 }
 func Index(c *gin.Context){

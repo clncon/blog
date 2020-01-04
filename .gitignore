@@ -1,3 +1,5 @@
 .idea/
 .git/
 blog.db
+static/upload/
+vendor/github.com/satori/
