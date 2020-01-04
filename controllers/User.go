@@ -47,7 +47,7 @@ func SignupPost(c *gin.Context) {
 		Email:     email,
 		Telephone: telephone,
 		Password:  password,
-		IsAdmin:   true,
+		IsAdmin:   false,
 	}
 
 	if len(user.Email) == 0 || len(user.Password) == 0 {

@@ -41,7 +41,7 @@ func main() {
 	router.GET("/auth/:authType", controllers.AuthGet)
 	router.GET("/",controllers.Blog)
 	router.GET("/page",controllers.Page)
-	router.GET("/go",controllers.Go)//自动部署
+	router.POST("/go",controllers.Go)//自动部署
 	//register
 	if system.GetConfiguration().SignupEnabled {
 		router.GET("/register", controllers.SignupGet)

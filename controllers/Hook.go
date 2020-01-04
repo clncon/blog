@@ -10,8 +10,9 @@ import (
 func Go(c *gin.Context) {
 	//获取可执行文件路径hook.sh
 	command := system.GetConfiguration().ShellPath
+    signature :=c.GetHeader("X-Hub-Signature")
 	doShell(command)
-	c.JSON(200, "success")
+	c.JSON(200, signature)
 }
 
 func doShell(command string) {
