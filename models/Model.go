@@ -7,30 +7,31 @@ import (
 )
 
 type BaseModel struct {
-	ID uint `gorm:"primary_key"`
-	Creator string
+	ID        uint `gorm:"primary_key"`
+	Creator   string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
 type Tag struct {
 	BaseModel
-	Name string //标签名称
-	IsUsing bool //是否使用
+	Name    string //标签名称
+	IsUsing bool   //是否使用
 }
 type TagPage struct {
 	BaseModel
-	TagId uint
+	TagId  uint
 	PageId uint
 }
 type Page struct {
 	BaseModel
-	Title string
-	Desc string
-	Body string `gorm:"type:text"`
-	Source string `gorm:"type.text"`
+	Title       string
+	Desc        string
+	Body        string `gorm:"type:text"`
+	Source      string `gorm:"type.text"`
 	IsPublished bool
 }
+
 // table users
 type User struct {
 	gorm.Model
@@ -47,140 +48,143 @@ type User struct {
 	NickName      string    // 昵称
 	LockState     bool      `gorm:"default:'0'"` //锁定状态
 }
-func (tagPage *TagPage) Insert() error{
-   return DB.FirstOrCreate(tagPage,"page_id=? and tag_id=?",tagPage.PageId,tagPage.TagId).Error
+
+func (tagPage *TagPage) Insert() error {
+	return DB.FirstOrCreate(tagPage, "page_id=? and tag_id=?", tagPage.PageId, tagPage.TagId).Error
 }
-func (tag *Tag) Insert() error{
-	return DB.FirstOrCreate(tag,"name = ?", tag.Name).Error
+func (tag *Tag) Insert() error {
+	return DB.FirstOrCreate(tag, "name = ?", tag.Name).Error
 }
-func (page *Page) Insert() (uint,error){
-	err:=DB.Create(page).Error
-	if err!=nil{
-		return 0,err
-	}else{
+func (page *Page) Insert() (uint, error) {
+	err := DB.Create(page).Error
+	if err != nil {
+		return 0, err
+	} else {
 		var id []uint
 		DB.Raw("select last_insert_rowid() as id").Pluck("id", &id)
-		return id[0],nil
+		return id[0], nil
 	}
 
 }
-func RemoveTagPageByPageId(pageId string) error{
-	return DB.Delete(&TagPage{},"page_id=?",pageId).Error
+func RemoveTagPageByPageId(pageId string) error {
+	return DB.Delete(&TagPage{}, "page_id=?", pageId).Error
 }
-func GetTagPage(pageId interface{})([]*TagPage,error){
+func GetTagPage(pageId interface{}) ([]*TagPage, error) {
 	var tagPages []*TagPage
-	rows,err := DB.Raw("select * from tag_pages where page_id=?",pageId).Rows()
-	if err !=nil {
-		return nil,err
+	rows, err := DB.Raw("select * from tag_pages where page_id=?", pageId).Rows()
+	if err != nil {
+		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var tagPage TagPage
-		DB.ScanRows(rows,&tagPage)
-		tagPages = append(tagPages,&tagPage)
+		DB.ScanRows(rows, &tagPage)
+		tagPages = append(tagPages, &tagPage)
 	}
-	return tagPages,nil
+	return tagPages, nil
 }
-func GetPage(id interface{})(*Page,error){
+func GetPage(id interface{}) (*Page, error) {
 	var page Page
-	err:=DB.First(&page,id).Error
-	return &page,err
+	err := DB.First(&page, id).Error
+	return &page, err
 }
-func ListTag() ([]*Tag,error){
+func ListTag() ([]*Tag, error) {
 	var tags []*Tag
-	rows,err := DB.Raw("select * from tags").Rows()
-	if err !=nil {
-		return nil,err
+	rows, err := DB.Raw("select * from tags").Rows()
+	if err != nil {
+		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var tag Tag
-		DB.ScanRows(rows,&tag)
-		tags = append(tags,&tag)
+		DB.ScanRows(rows, &tag)
+		tags = append(tags, &tag)
 	}
-	return tags,nil
+	return tags, nil
 }
-func ListPage()([]*Page,error){
-  var pages []*Page
-  rows,err := DB.Raw("select * from pages").Rows()
-  if err != nil {
-  	return nil,err
-  }
+func ListPage() ([]*Page, error) {
+	var pages []*Page
+	rows, err := DB.Raw("select * from pages where is_published=?", true).Rows()
+	if err != nil {
+		return nil, err
+	}
 
-  for rows.Next() {
-  	var page Page
-  	DB.ScanRows(rows,&page)
-  	pages = append(pages,&page)
-  }
-  return pages,nil
+	for rows.Next() {
+		var page Page
+		DB.ScanRows(rows, &page)
+		pages = append(pages, &page)
+	}
+	return pages, nil
 }
-func DeletePage(id string) error{
-	return DB.Delete(Page{},"id=?",id).Error
+func DeletePage(id string) error {
+	return DB.Delete(Page{}, "id=?", id).Error
 }
-func UpdatePage(id string,page Page)error{
+func UpdatePage(id string, page Page) error {
 	return DB.Model(&page).Where("id = ?", id).Updates(
-		&Page{Title:page.Title,Desc:page.Desc,Body:page.Body,Source:page.Source,IsPublished:page.IsPublished}).Error
+		&Page{Title: page.Title, Desc: page.Desc, Body: page.Body, Source: page.Source, IsPublished: page.IsPublished}).Error
 }
-func ListTagForIsUsing()([]*Tag,error){
-    var tags []*Tag
-	rows,err := DB.Raw("select * from tags where is_using=?",1).Rows()
-	if err !=nil {
-		return nil,err
+func ListTagForIsUsing() ([]*Tag, error) {
+	var tags []*Tag
+	rows, err := DB.Raw("select * from tags where is_using=?", 1).Rows()
+	if err != nil {
+		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var tag Tag
-		DB.ScanRows(rows,&tag)
-		tags = append(tags,&tag)
+		DB.ScanRows(rows, &tag)
+		tags = append(tags, &tag)
 	}
-	return tags,nil
+	return tags, nil
 }
-func MustListTag()[]*Tag{
-    tags,_:=ListTag()
-    return tags
+func MustListTag() []*Tag {
+	tags, _ := ListTag()
+	return tags
 }
+
 var DB *gorm.DB
-func InitDB() (*gorm.DB, error){
-	db,err:=gorm.Open("sqlite3","blog.db")
+
+func InitDB() (*gorm.DB, error) {
+	db, err := gorm.Open("sqlite3", "blog.db")
 	//db, err := gorm.Open("mysql", "root:mysql@/wblog?charset=utf8&parseTime=True&loc=Asia/Shanghai")
 	if err == nil {
 		DB = db
 		//db.LogMode(true)
-		db.AutoMigrate(&Tag{},&Page{},&TagPage{},&User{})
-		db.Model(&TagPage{}).AddUniqueIndex("uk_post_tag","page_id","tag_id")
-		return db,err
+		db.AutoMigrate(&Tag{}, &Page{}, &TagPage{}, &User{})
+		db.Model(&TagPage{}).AddUniqueIndex("uk_post_tag", "page_id", "tag_id")
+		return db, err
 	}
 	return nil, err
 
 }
 
-
-func ListUser()([]*User,error){
+func ListUser() ([]*User, error) {
 	var pages []*User
-	rows,err := DB.Raw("select * from users").Rows()
+	rows, err := DB.Raw("select * from users").Rows()
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 
 	for rows.Next() {
 		var user User
-		DB.ScanRows(rows,&user)
-		pages = append(pages,&user)
+		DB.ScanRows(rows, &user)
+		pages = append(pages, &user)
 	}
-	return pages,nil
+	return pages, nil
 }
+
 // user
 // insert user
-func GetUserByUsername(username string)(*User,error){
+func GetUserByUsername(username string) (*User, error) {
 	var user User
-	err:=DB.First(&user,"email=?",username).Error
-	return &user,err
+	err := DB.First(&user, "email=?", username).Error
+	return &user, err
 }
 func (user *User) Insert() error {
 	return DB.Create(user).Error
 }
-func GetUser(id interface{})(*User,error){
-  var user User
-  err:=DB.First(&user,id).Error
-  return &user,err
+func GetUser(id interface{}) (*User, error) {
+	var user User
+	err := DB.First(&user, id).Error
+	return &user, err
 }
