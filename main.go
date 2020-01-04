@@ -17,7 +17,7 @@ import (
 )
 
 func main() {
-	configFilePath := flag.String("C", "/root/go/src/blog/conf/conf.yaml", "config file path")
+	configFilePath := flag.String("C", "conf/conf.yaml", "config file path")
 	if err:=system.LoadConfiguration(*configFilePath);err!=nil{
 		logrus.Error("err parsing config log file",err)
 		return
@@ -41,6 +41,7 @@ func main() {
 	router.GET("/auth/:authType", controllers.AuthGet)
 	router.GET("/",controllers.Blog)
 	router.GET("/page",controllers.Page)
+	router.GET("/go",controllers.Go)//自动部署
 	//register
 	if system.GetConfiguration().SignupEnabled {
 		router.GET("/register", controllers.SignupGet)
@@ -66,7 +67,7 @@ func main() {
 		authorized.GET("/userPage",controllers.ToUserPage)
 
 	}
-	logrus.Info(getCurrentDirectory())
+	//logrus.Info(getCurrentDirectory())
 	router.Run(":80")
 
 }
@@ -133,5 +134,6 @@ func getCurrentDirectory() string {
 		logrus.Error(err.Error())
 	}
     dir="/root/go/src/blog"
+	//dir="/Users/kongmin/go/src/blog"
 	return strings.Replace(dir, "\\", "/", -1)
 }
