@@ -21,11 +21,17 @@ func Go(c *gin.Context) {
 		mac.Write(buff[0:n])
 		n,_=c.Request.Body.Read(buff)
 	}
-	result:=hex.EncodeToString(mac.Sum(nil))
+	sha1:="sha1="+hex.EncodeToString(mac.Sum(nil))
 
     signature :=c.GetHeader("X-Hub-Signature")
-	doShell(command)
-	c.JSON(200, signature+":"+result)
+    if sha1 == signature {
+    	doShell(command)
+		c.JSON(200,"auto deploy success")
+	}else {
+		c.JSON(500,"signature error")
+	}
+
+
 }
 
 func doShell(command string) {
