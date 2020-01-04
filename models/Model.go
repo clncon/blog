@@ -102,6 +102,26 @@ func ListTag() ([]*Tag, error) {
 	}
 	return tags, nil
 }
+/**
+ *显示所有的Page
+ */
+func ListPageAll() ([]*Page, error) {
+	var pages []*Page
+	rows, err := DB.Raw("select * from pages").Rows()
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var page Page
+		DB.ScanRows(rows, &page)
+		pages = append(pages, &page)
+	}
+	return pages, nil
+}
+/**
+  显示发布的Page
+ */
 func ListPage() ([]*Page, error) {
 	var pages []*Page
 	rows, err := DB.Raw("select * from pages where is_published=?", true).Rows()

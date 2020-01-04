@@ -26,7 +26,7 @@ func Index(c *gin.Context){
 	})
 }
 func ListPage(c *gin.Context){
-   pages,_:=models.ListPage()
+   pages,_:=models.ListPageAll()
    c.JSON(200,pages)
 }
 func DeletePage(c *gin.Context){
