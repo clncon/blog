@@ -22,5 +22,5 @@ if err!=nil {
 
 logrus.Infof("Execute Shell %s finished with output:\n%s",command,string(output))
 
-
+  c.JSON(200,"success")
 }
