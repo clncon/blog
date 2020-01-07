@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -122,9 +123,10 @@ func ListPageAll() ([]*Page, error) {
 /**
   显示发布的Page
  */
-func ListPage() ([]*Page, error) {
+func ListPage(current,pageSize int) ([]*Page, error) {
 	var pages []*Page
-	rows, err := DB.Raw("select * from pages where is_published=?", true).Rows()
+	var currentRow = (current-1)*pageSize
+	rows, err := DB.Raw("select * from pages where is_published=?", true).Limit(pageSize).Offset(currentRow).Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -135,6 +137,15 @@ func ListPage() ([]*Page, error) {
 		pages = append(pages, &page)
 	}
 	return pages, nil
+}
+func Total()(total int){
+
+	err := DB.Raw("select count(1) from pages where is_published=?", true).Count(&total)
+	if err.Error != nil {
+		logrus.Error(err.Error)
+		total=0
+	}
+	return total
 }
 func DeletePage(id string) error {
 	return DB.Delete(Page{}, "id=?", id).Error

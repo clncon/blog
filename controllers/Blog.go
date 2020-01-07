@@ -2,8 +2,10 @@ package controllers
 
 import (
    "blog/models"
+   "blog/system"
    "github.com/gin-gonic/gin"
    "github.com/sirupsen/logrus"
+   "strconv"
 )
 type Post struct {
    Page *models.Page
@@ -30,7 +32,30 @@ func Page(c *gin.Context){
 }
 func Blog(c *gin.Context){
    var posts []*Post
-   pages,_:=models.ListPage()
+   pageSize:=system.GetConfiguration().PageSize
+   total:=models.Total()
+   remainder:=total%pageSize
+   totalPage:=total/pageSize
+   if remainder!=0||totalPage==0{
+       totalPage++
+   }
+   val:=c.DefaultQuery("pageNum","1")
+   var currentPage int
+   temp,err:=strconv.ParseInt(val,10,64)
+   if err !=nil {
+      c.JSON(500,"no format number!!!")
+      return
+   }
+   currentPage = int(temp)
+
+   //logrus.Info(currentPage)
+   if currentPage < 1{
+      currentPage=1
+   }
+   if currentPage > totalPage {
+      currentPage=totalPage
+   }
+   pages,_:=models.ListPage(currentPage,pageSize)
    for i:=0;i<len(pages);i++{
       var post Post
       page:=pages[i]
@@ -46,8 +71,9 @@ func Blog(c *gin.Context){
       post.Tags=tags
       posts=append(posts,&post)
    }
-   logrus.Info(len(posts))
    c.HTML(200,"blog/index.html",gin.H{
       "posts":posts,
+      "totalPage":totalPage,
+      "currentPage":currentPage,
    })
 }

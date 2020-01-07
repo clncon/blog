@@ -67,6 +67,9 @@
          .page .head {
              text-align: center;
          }
+         .page-font{
+             font-size: medium;
+         }
          .desc {
              background-color: RGB(247,247,247);
              width: 100%;
@@ -158,9 +161,14 @@
 
     </div>
     {{end}}
+    <nav aria-label="...">
+        <ul class="pager">
+            <li><a href="/?pageNum={{minus .currentPage 1}}">上一页</a></li>
+            <span class="page-font">{{.currentPage}}/{{.totalPage}}</span>
+            <li><a href="/?pageNum={{add .currentPage 1}}">下一页</a></li>
+        </ul>
+    </nav>
 </div>
-
-
 
  <div id="right">
      <div class="widget">
