@@ -15,6 +15,7 @@ type Post struct {
 
 func Page(c *gin.Context) {
 	id := c.DefaultQuery("id", "1")
+	tagCounts, _ := models.ListTagCount()
 	page, err := models.GetPage(id)
 	var tags []*models.Tag
 	if err == nil {
@@ -26,8 +27,9 @@ func Page(c *gin.Context) {
 		}
 	}
 	c.HTML(200, "blog/page.html", gin.H{
-		"page": page,
-		"tags": tags,
+		"page":      page,
+		"tags":      tags,
+		"tagCounts": tagCounts,
 	})
 
 }
