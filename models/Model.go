@@ -49,6 +49,10 @@ type User struct {
 	NickName      string    // 昵称
 	LockState     bool      `gorm:"default:'0'"` //锁定状态
 }
+type TagCount struct {
+	Name  string
+	Count int
+}
 
 func (tagPage *TagPage) Insert() error {
 	return DB.FirstOrCreate(tagPage, "page_id=? and tag_id=?", tagPage.PageId, tagPage.TagId).Error
@@ -89,6 +93,21 @@ func GetPage(id interface{}) (*Page, error) {
 	err := DB.First(&page, id).Error
 	return &page, err
 }
+func ListTagCount() ([]*TagCount, error) {
+	var tagCounts []*TagCount
+	rows, err := DB.Raw("select t.name as name,count(*) as count from tags t left join tag_pages tp on t.id=tp.tag_id group by t.name").Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var tagCount TagCount
+		DB.ScanRows(rows, &tagCount)
+		logrus.Info(tagCount.Name + "ff")
+		tagCounts = append(tagCounts, &tagCount)
+	}
+	return tagCounts, nil
+}
 func ListTag() ([]*Tag, error) {
 	var tags []*Tag
 	rows, err := DB.Raw("select * from tags").Rows()
@@ -103,6 +122,7 @@ func ListTag() ([]*Tag, error) {
 	}
 	return tags, nil
 }
+
 /**
  *显示所有的Page
  */
@@ -120,12 +140,13 @@ func ListPageAll() ([]*Page, error) {
 	}
 	return pages, nil
 }
+
 /**
   显示发布的Page
- */
-func ListPage(current,pageSize int) ([]*Page, error) {
+*/
+func ListPage(current, pageSize int) ([]*Page, error) {
 	var pages []*Page
-	var currentRow = (current-1)*pageSize
+	var currentRow = (current - 1) * pageSize
 	rows, err := DB.Raw("select * from pages where is_published=?", true).Limit(pageSize).Offset(currentRow).Rows()
 	if err != nil {
 		return nil, err
@@ -138,12 +159,12 @@ func ListPage(current,pageSize int) ([]*Page, error) {
 	}
 	return pages, nil
 }
-func Total()(total int){
+func Total() (total int) {
 
 	err := DB.Raw("select count(1) from pages where is_published=?", true).Count(&total)
 	if err.Error != nil {
 		logrus.Error(err.Error)
-		total=0
+		total = 0
 	}
 	return total
 }
