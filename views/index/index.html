@@ -197,12 +197,9 @@
              <h3>分类</h3>
              <hr>
                <ul class="category-list">
-                   <li><a href="#">新垣结衣</a> <span>(31)</span></li>
-                   <li><a href="#">新垣结衣</a> <span>(31)</span></li>
-                   <li><a href="#">新垣结衣</a> <span>(31)</span></li>
-                   <li><a href="#">新垣结衣</a> <span>(31)</span></li>
-                   <li><a href="#">新垣结衣</a> <span>(31)</span></li>
-                   <li><a href="#">新垣结衣</a> <span>(31)</span></li>
+                   {{range .tagCounts}}
+                   <li><a href="#">{{.Name}}</a> <span>({{.Count}})</span></li>
+                   {{end}}
                </ul>
          </div>
      </div>
