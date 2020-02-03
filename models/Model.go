@@ -147,7 +147,7 @@ func ListPageAll() ([]*Page, error) {
 func ListPage(current, pageSize int) ([]*Page, error) {
 	var pages []*Page
 	var currentRow = (current - 1) * pageSize
-	rows, err := DB.Raw("select * from pages where is_published=?", true).Limit(pageSize).Offset(currentRow).Rows()
+	rows, err := DB.Raw("select * from pages where is_published=? order by created_at desc", true).Limit(pageSize).Offset(currentRow).Rows()
 	if err != nil {
 		return nil, err
 	}
