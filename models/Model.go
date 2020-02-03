@@ -224,6 +224,11 @@ func ListUser() ([]*User, error) {
 	}
 	return pages, nil
 }
+func (user *User) FirstOrCreate() (*User, error) {
+
+	err := DB.FirstOrCreate(user, "github_login_id = ?", user.GithubLoginId).Error
+	return user, err
+}
 
 // user
 // insert user
@@ -238,5 +243,32 @@ func (user *User) Insert() error {
 func GetUser(id interface{}) (*User, error) {
 	var user User
 	err := DB.First(&user, id).Error
+	return &user, err
+}
+
+func IsGithubIdExists(githubId string, id uint) (*User, error) {
+	var user User
+	err := DB.First(&user, "github_login_id = ?", user.GithubLoginId).Error
+	return &user, err
+}
+func (user *User) UpdateGithubUserInfo() error {
+	var githubLoginId interface{}
+	if len(user.GithubLoginId) == 0 {
+		githubLoginId = gorm.Expr("NULL")
+	} else {
+		githubLoginId = user.GithubLoginId
+	}
+
+	return DB.Model(user).Update(map[string]interface{}{
+		"github_login_id": githubLoginId,
+		"avatar_url":      user.AvatarUrl,
+		"github_url":      user.GithubUrl,
+		"NickName":        user.NickName,
+	}).Error
+
+}
+func IsExists(email string) (*User, error) {
+	var user User
+	err := DB.First(&user, "email = ?", email).Error
 	return &user, err
 }

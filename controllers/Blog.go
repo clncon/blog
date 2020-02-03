@@ -35,6 +35,8 @@ func Page(c *gin.Context) {
 }
 func Blog(c *gin.Context) {
 	var posts []*Post
+	user, _ := c.Get(CONTEXT_USER_KEY)
+	logrus.Info(user)
 	tagCounts, _ := models.ListTagCount()
 	pageSize := system.GetConfiguration().PageSize
 	total := models.Total()
@@ -80,5 +82,6 @@ func Blog(c *gin.Context) {
 		"totalPage":   totalPage,
 		"currentPage": currentPage,
 		"tagCounts":   tagCounts,
+		"user":        user,
 	})
 }

@@ -3,11 +3,12 @@ qiniu_accesskey:
 qiniu_secretkey:
 qiniu_fileserver:
 qiniu_bucket:
-github_clientid:
-github_clientsecret:
+github_clientid: 6e361773ac554629fb8c
+github_clientsecret: 40608234704eda782b338b481a89570361e7c0e5
 github_authurl: https://github.com/login/oauth/authorize?client_id=%s&scope=user:email&state=%s
 # 与github配置的回调地址一致
-github_redirecturl: http://localhost:8090/oauth2callback
+#github_redirecturl: http://129.226.126.12/
+github_redirecturl: http://129.226.126.12/oauth2callback
 github_tokenurl: https://github.com/login/oauth/access_token
 github_scope:
 smtp_username:
