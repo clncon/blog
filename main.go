@@ -70,7 +70,7 @@ func main() {
 
 	}
 	//logrus.Info(getCurrentDirectory())
-	router.Run()
+	router.Run(":80")
 
 }
 
